@@ -11,6 +11,7 @@ device = torch.device("cuda")
 tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-7B-Chat", trust_remote_code=True)
 # use auto mode, automatically select precision based on the device.
 model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-7B-Chat", device_map="auto", trust_remote_code=True).eval()
+model = model.to(device)
 
 current_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())
 log_name = "log_" + current_time + ".log"
