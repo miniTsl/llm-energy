@@ -12,7 +12,7 @@ args = parser.parse_args()
 
 # 需要减去GPU的基础功耗，静置时GPU大概也有22-30W的功耗
 device = torch.device("cuda")
-monitor = ZeusMonitor(gpu_indices=[torch.cuda.current_device()], log_file="probe.log", approx_instant_energy=True)
+monitor = ZeusMonitor(gpu_indices=[torch.cuda.current_device()], approx_instant_energy=True)
 tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-7B-Chat", trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-7B-Chat", device_map="auto", trust_remote_code=True).eval()
 # define hook function
