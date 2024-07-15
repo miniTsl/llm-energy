@@ -3,19 +3,20 @@ from transformers.generation import GenerationConfig
 import torch
 from zeus.monitor import ZeusMonitor
 
-# 从命令行中读取参数
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--hook", type=bool, default=False)
 parser.add_argument("--module", type=str, default=None)
 args = parser.parse_args()
 
-# 需要减去GPU的基础功耗，静置时GPU大概也有22-30W的功耗
+# need to subtract the basic power consumption of the GPU? The GPU has about 22-30W power consumption when idle
 device = torch.device("cuda")
-monitor = ZeusMonitor(gpu_indices=[torch.cuda.current_device()], approx_instant_energy=True)
+monitor = ZeusMonitor(gpu_indices=[0], approx_instant_energy=True)
 tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-7B-Chat", trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-7B-Chat", device_map="auto", trust_remote_code=True).eval()
+
 # define hook function
+# repeat the forward function of the module in place
 def forward_hook(module, input, output):
     new_output = module.forward(input[0])  
 
@@ -57,27 +58,7 @@ else:
 result_file = open(result_file_name, "w")
 
 
-
-
-# monitor.begin_window("init_tokenizer")
-
-# init_tokenizer_eres = monitor.end_window("init_tokenizer")
-# print("init_tokenizer time: ", init_tokenizer_eres.time)
-# print("init_tokenizer energy: ", init_tokenizer_eres.total_energy)
-# # write the result to the file
-# result_file.write("init_tokenizer time: " + str(init_tokenizer_eres.time) + "\n")
-# result_file.write("init_tokenizer energy: " + str(init_tokenizer_eres.total_energy) + "\n")
-# result_file.write("\n")
-
-# monitor.begin_window("init_model")
 model = model.to(device)
-# init_model_eres = monitor.end_window("init_model")
-# print("init_model time: ", init_model_eres.time)
-# print("init_model energy: ", init_model_eres.total_energy)
-# # write the result to the file
-# result_file.write("init_model time: " + str(init_model_eres.time) + "\n")
-# result_file.write("init_model energy: " + str(init_model_eres.total_energy) + "\n")
-# result_file.write("\n")
 
 inference_token_nums = []
 inference_times = []

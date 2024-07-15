@@ -51,7 +51,7 @@ print("transformer_QWenAttention", transformer_QWenAttention)
 print("transformer_QWenMLP", transformer_QWenMLP)
 print("transformer_RMSNorm", transformer_RMSNorm)
 
-labels = ['lm_head', 'QWenBlock', 'others']
+labels = ['lm_head', 'QWenBlock(s)', 'others']
 sizes = [lm_head_part, QWenBlock_ratio_part, others_ratio_part]
 colors = ['gold', 'yellowgreen', 'lightcoral']
 
@@ -60,20 +60,20 @@ sizes_inside_QWenBlock = [QWenAttention_inside_QWenBlock_part, QWenMLP_inside_QW
 colors_inside_QWenBlock = ['gold', 'yellowgreen', 'lightcoral', 'lightskyblue']
 
 # 创建子图，确保左右子图大小相同
-fig, axs = plt.subplots(1, 2, figsize=(24, 8))
+fig, axs = plt.subplots(1, 3, figsize=(36, 8))
 
-# # 左边子图展示模型结构（文字左对齐）
-# axs[0].text(-0.2, 0.5, model_structure, horizontalalignment='left', verticalalignment='center', fontsize=16, family='monospace')
-# axs[0].axis('off')
+# 左边子图展示模型结构（文字左对齐）
+axs[0].text(-0.2, 0.5, model_structure, horizontalalignment='left', verticalalignment='center', fontsize=16, family='monospace')
+axs[0].axis('off')
 
 
 # 右边子图展示饼图
-axs[0].pie(sizes, labels=labels, colors=colors, radius=1, autopct='%1.1f%%', textprops={'fontsize': 24})
-axs[0].axis('equal')
-axs[0].set_title('Energy Distribution of QWen-chat-7b', fontsize=24)
-
-axs[1].pie(sizes_inside_QWenBlock, labels=lables_inside_QWenBlock, radius=1, colors=colors_inside_QWenBlock, autopct='%1.1f%%', textprops={'fontsize': 24})
+axs[1].pie(sizes, labels=labels, colors=colors, radius=1, autopct='%1.1f%%', textprops={'fontsize': 24})
 axs[1].axis('equal')
-axs[1].set_title('Energy Distribution inside QWenBlock', fontsize=24)
+axs[1].set_title('GPU energy Distribution of QWen-chat-7b', fontsize=24)
+
+axs[2].pie(sizes_inside_QWenBlock, labels=lables_inside_QWenBlock, radius=1, colors=colors_inside_QWenBlock, autopct='%1.1f%%', textprops={'fontsize': 24})
+axs[2].axis('equal')
+axs[2].set_title('GPU energy Distribution inside QWenBlock(s)', fontsize=24)
 
 plt.savefig('model_energy_distribution.png')

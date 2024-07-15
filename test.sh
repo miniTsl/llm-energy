@@ -3,7 +3,7 @@
 # Function to run test case
 run_test_case() {
     echo "Running test case for module: $1"
-    python qwen_chat_7b_zeus_hook.py --hook True --module $1
+    python qwen_chat_7b_hook_zeus.py --hook True --module $1
     sleep 300  # Sleep for 5 minutes to cool down the GPU
     echo "" # Add a new line
 }
@@ -17,6 +17,6 @@ run_test_case "transformer_h_QWenBlock"
 run_test_case "transformer_h_QWenBlock_RMSNorm"
 run_test_case "transformer_h_QWenBlock_QWenAttention"
 run_test_case "transformer_h_QWenBlock_QWenMLP"
-python qwen_chat_7b_zeus_hook.py
+python qwen_chat_7b_hook_zeus.py
 
 echo "All test cases completed."
